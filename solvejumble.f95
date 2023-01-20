@@ -3,12 +3,8 @@ program test
     use lexicon
     implicit none
 
-    integer :: result ! For factorial example - delete after use
     character, dimension(1) :: inputWord
-
     call inputJumble()
-    call factorial(5, result)
-    print *, result
 
     contains
 
@@ -41,24 +37,16 @@ program test
 
     recursive subroutine generateAnagram(word, left, right)
         character, dimension(1), intent(inout) :: word
-        integer, intent(in) :: left, right ! positions (left = current step, right = last letter)
-        ! integer, intent(out) :: anagrams
-        ! character, dimension(1) :: swappedWord
-        integer :: i, j
-
-        ! integer :: temp
+        integer, intent(in) :: left, right
+        integer :: i
 
         if(left == right) then
             print *, "anagram: ", word(1:right)
         else
             do i = left, right
                 call swap(word, left, i)
-                ! do j = 1, right
-                !     print*, "shifted --> word(j) = ", word(j)
-                ! end do
                 call generateAnagram(word, left+1, right)
                 call swap(word, left, i)
-                ! print *, word
             end do
         end if
 
