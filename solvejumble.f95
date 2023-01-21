@@ -7,24 +7,8 @@ program solvejumble
     implicit none
 
     character, dimension(1) :: inputWord
-    integer :: lines, i
-    character(len=maxSize) :: lineInput
 
-    ! Open dictonary file (words.txt) and read/store words:
-    open(unit=fileUnit, file=filename)
-    lines = findNumLines(fileUnit)
-    allocate(dictionary%list(lines))
-    do i = 1, lines
-        read(fileUnit, '(A)') lineInput
-        allocate(character(len=len(trim(lineInput))) :: dictionary%list(i)%word)
-        dictionary%list(i)%word = trim(lineInput)
-    end do
-    close(fileUnit)
-
-    ! do i = 1, lines
-    !     print *, dictionary%list(i)%word
-    ! end do
-
+    call buildLexicon()
     call inputJumble()
 
     contains
@@ -57,12 +41,19 @@ program solvejumble
         end subroutine inputJumble
 
         recursive subroutine generateAnagram(word, left, right)
+
             character, dimension(1), intent(inout) :: word
             integer, intent(in) :: left, right
             integer :: i
+            logical :: anagramInDic=.false.
 
             if(left == right) then
                 print *, "anagram: ", word(1:right)
+                call findAnagram(word(1:right), right, anagramInDic)
+                if(anagramInDic) then
+                    print *, "anagram found in dictionary: ", word
+                    return
+                end if
             else
                 do i = left, right
                     call swap(word, left, i)
@@ -77,6 +68,7 @@ program solvejumble
         ! wordLen: length of word
         ! i, j: positions to swap
         subroutine swap(word, i, j)
+
             character, dimension(1), intent(inout) :: word
             integer, intent(in) :: i, j
             character :: temp
@@ -87,8 +79,19 @@ program solvejumble
 
         end subroutine swap
 
-        subroutine findAnagram()
-            ! TODO
+        subroutine findAnagram(word, wordLen, ret)
+
+            character, dimension(1), intent(in) :: word
+            integer, intent(in) :: wordLen
+            logical, intent(inout) :: ret
+
+            call findLex(word, wordLen, ret)
+            if(ret) then
+                ret = .true.
+            else
+                ret = .false.
+            end if
+
         end subroutine findAnagram
 
 end program solvejumble
