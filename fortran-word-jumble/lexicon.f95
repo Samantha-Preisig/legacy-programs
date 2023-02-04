@@ -14,8 +14,9 @@ module lexicon
 
     type(strList) :: jumbledWords
     type(strList) :: dictionary
+    type(strList) :: solvedWords
     integer, parameter :: maxSize=20, maxLen=256
-    character(len=9), parameter :: filename = 'words.txt'
+    character(len=9), parameter :: filename = 'dict2.txt'
     integer, parameter :: fileUnit = 1000
     integer :: lines
 
@@ -63,19 +64,57 @@ module lexicon
 
             character, dimension(1), intent(in) :: anagram
             integer, intent(in) :: anagramLen
+            ! character(len=anagramLen), intent(in) :: anagram
             logical, intent(out) :: ret
-            integer :: i, j, counter=0
+            integer :: i, j, matched=0
+            character, dimension(1) :: dict
+            character :: dict_letter
+            ! anagram_rank = anagram(1:anagramLen)
+            ! print *, anagram_rank
+            ! print *, "anagramLen = ", anagramLen
+            logical :: found = .false.
+
 
             do i = 1, lines
-                ! do j = 1, anagramLen
-                    print *, anagram(i)
-                    if(anagram(i) .eq. dictionary%list(i)%word) then
-                        ret = .true.
-                    end if
-                ! end do
+                matched = 0
+                ! print *, "len of dic word: ", len(dictionary%list(i)%word)
+                if(len(dictionary%list(i)%word) == anagramLen) then
+                    do j = 1, len(dictionary%list(i)%word)
+                        ! print *, "here in loop"
+                        dict_letter = achar(iachar(dictionary%list(i)%word(j:j)))
+                        ! print *, "dict: ", dict_letter
+                        ! print *, "anagram: ", anagram(j)
+                        if(dict_letter == anagram(j)) then
+                            matched = matched + 1
+                            ! print *, "matched: ", matched
+
+                            if(anagramLen == matched .and. j == anagramLen) then
+                                print *, dictionary%list(i)%word
+                            end if
+                        end if
+                        if(matched == anagramLen .and. j == anagramLen) then ! exit
+                            ! print *, "FOUND!!!! ", dictionary%list(i)%word
+                            found = .true.
+                        end if
+                        ! if(matched == anagramLen .and. j == anagramLen) exit
+                        if(found) exit
+                    end do
+                end if
             end do
-            ret = .false.
+
+            if(found) then
+                ret = .true.
+            else
+                ret = .false.
+            end if
 
         end subroutine findLex
+
+        subroutine split(word, wordLen)
+
+            integer, intent(in) :: wordLen
+            character(len=wordLen), intent(in) :: word
+
+        end subroutine
 
 end module lexicon

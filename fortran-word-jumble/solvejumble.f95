@@ -48,10 +48,11 @@ program solvejumble
             logical :: anagramInDic=.false.
 
             if(left == right) then
-                print *, "anagram: ", word(1:right)
+                ! print *, "here before findAna"
                 call findAnagram(word(1:right), right, anagramInDic)
+                ! print *, "here after findAna"
                 if(anagramInDic) then
-                    print *, "anagram found in dictionary: ", word
+                    print *, "anagram found in dictionary: ", word(1:right)
                     return
                 end if
             else
@@ -84,6 +85,9 @@ program solvejumble
             character, dimension(1), intent(in) :: word
             integer, intent(in) :: wordLen
             logical, intent(inout) :: ret
+            character(len=wordLen) :: wordScalar
+
+            integer :: i
 
             call findLex(word, wordLen, ret)
             if(ret) then
