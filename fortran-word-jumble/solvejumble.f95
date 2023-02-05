@@ -1,9 +1,6 @@
 ! for lexicon.mod: gfortran -c lexicon.f95
 ! gfortran -Wall solvejumble.f95 lexicon.f95
 
-! write(*, "(A)") "I'M PRINTING A STRING"
-! write(*, "(I0)") myInt
-
 program solvejumble
     
     use lexicon
@@ -22,13 +19,13 @@ program solvejumble
 
             integer :: numWords, i, inputLen, j, jumblePuzzle=-1, indexCounter=1
             character(len=maxSize) :: input, jumblePuzzleInput
-            character, dimension(1) :: circledLetters
+            character, dimension(maxSize) :: circledLetters
 
             write (*, '(A)', advance='no') "How many jumbled words? "
             read (*,'(I2)') numWords
 
             allocate(jumbledWords%list(numWords))
-            allocate(solvedWords%list(numWords))
+            allocate(solvedWords%list(numWords+1))
 
             write (*, '(A)', advance='no') "Enter the "
             write (*, '(I2)', advance='no') numWords
@@ -44,9 +41,6 @@ program solvejumble
                 do j = 1, inputLen
                     inputWord(j) = achar(iachar(input(j:j)))
                 end do
-
-                ! call generateAnagram(inputWord, 1, inputLen)
-                ! print *, solvedWords%list(1)%word
             end do
 
             do i = 1, numWords
@@ -73,17 +67,21 @@ program solvejumble
             if(jumblePuzzleInput == "Y") then
                 do i = 1, numWords
                     write (*, '(A)', advance='no') solvedWords%list(i)%word
-                    write (*, '(A)', advance='no') " : "
-                    read (*,*) input
+                    write (*, '(A)', advance='no') ": "
+                    read (*, *) input
                     do j = 1, len(trim(input))
                         circledLetters(indexCounter) = achar(iachar(input(j:j)))
                         indexCounter = indexCounter + 1
                     end do
                 end do
+                
+                solvedIndex = solvedIndex + 1
+                foundWord = .false.
+                call generateAnagram(circledLetters(1:indexCounter-1), 1, indexCounter-1)
+                write (*, '(A)', advance='no') "Solved jumble: "
+                write (*, '(A)') solvedWords%list(solvedIndex)%word
             end if
-            do i = 1, indexCounter
-                print *, circledLetters(i)
-            end do
+
 
         end subroutine inputJumble
 
