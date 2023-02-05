@@ -20,18 +20,21 @@ program solvejumble
 
         subroutine inputJumble()
 
-            integer :: numWords, i, inputLen, j
-            character(len=maxSize) :: input
+            integer :: numWords, i, inputLen, j, jumblePuzzle=-1, indexCounter=1
+            character(len=maxSize) :: input, jumblePuzzleInput
+            character, dimension(1) :: circledLetters
 
-            print *, "How many jumbled words?"
-            read (*,*) numWords
+            write (*, '(A)', advance='no') "How many jumbled words? "
+            read (*,'(I2)') numWords
 
             allocate(jumbledWords%list(numWords))
             allocate(solvedWords%list(numWords))
 
-            print *, "Enter the ", numWords, " jumbled words:"
+            write (*, '(A)', advance='no') "Enter the "
+            write (*, '(I2)', advance='no') numWords
+            write (*, '(A)') " jumbled words:"
             do i = 1, numWords
-                print *, "> "
+                write (*, '(A)', advance='no') "> "
                 read (*,*) input
                 inputLen = len(trim(input))
                 allocate(character(len=inputLen) :: jumbledWords%list(i)%word)
@@ -52,9 +55,34 @@ program solvejumble
                 call generateAnagram(jumbledWords%list(i)%word, 1, len(jumbledWords%list(i)%word))
             end do
             
-            print *, "The following jumbles have been solved:"
+            write (*, '(A)') "The following jumbles have been solved:"
             do i = 1, numWords
-                print *, jumbledWords%list(i)%word, "   ", solvedWords%list(i)%word
+                write (*, '(4g0)') jumbledWords%list(i)%word, achar(9), solvedWords%list(i)%word ! achar(9) => tab character
+            end do
+
+            do while (jumblePuzzle == -1)
+                write (*, '(A)', advance='no') "Solve word jumble puzzle? "
+                read (*,*) jumblePuzzleInput
+                if(jumblePuzzleInput == "Y") then
+                    jumblePuzzle = 1
+                else if(jumblePuzzleInput == "N") then
+                    jumblePuzzle = 0
+                end if
+            end do
+
+            if(jumblePuzzleInput == "Y") then
+                do i = 1, numWords
+                    write (*, '(A)', advance='no') solvedWords%list(i)%word
+                    write (*, '(A)', advance='no') " : "
+                    read (*,*) input
+                    do j = 1, len(trim(input))
+                        circledLetters(indexCounter) = achar(iachar(input(j:j)))
+                        indexCounter = indexCounter + 1
+                    end do
+                end do
+            end if
+            do i = 1, indexCounter
+                print *, circledLetters(i)
             end do
 
         end subroutine inputJumble
