@@ -1,5 +1,8 @@
 # Fortran Word Jumble
 
+## TODO
+- Allow uppercase words (and mix of upper/lower case words)
+
 ### Requirements
 - Fortran 95+
 
@@ -81,6 +84,7 @@ Solved jumble: beaming
 ### Limitations
 - To generate anagrams, I chose to build an algorithm loosely based on Heap's algorithm `[1]` which generates all possible permutations of n-lengthed words by using recursion. Since the length of the word dictates the computational power to complete the anagram generation and word detection, this program only allows jumbled words of length 8 or less to be solved.
 - If the user is providing multiple circled letters or circled positions, there must be no spaces between the letters/numbers. Otherwise, letters/numbers beyond the first space will be ignored.
+- **Words and circled letters must be lowercase**
 
 ### References:
 - `[1]` https://craftofcoding.wordpress.com/

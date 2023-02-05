@@ -82,7 +82,7 @@ program solvejumble
                 ! letters given the position
                 ! Circled positions are given based on the solved (unjumbled) word
                 if(jumblePuzzleInput1 == "Y" .or. jumblePuzzleInput1 == "y") then
-                    write (*, '(A)', advance='no') "Enter the circled positions: "
+                    write (*, '(A)', advance='no') "Enter the circled positions (no spaces between numbers): "
                     read (*,*) input
 
                     do j = 1, len(trim(input))
@@ -138,7 +138,7 @@ program solvejumble
             ! Limitation: if the user is providing multiple letters, there must be no spaces between the letters. Otherwise,
             ! letters beyond the first space will be ignored
             if(jumblePuzzleInput2 == "Y" .or. jumblePuzzleInput2 == "y") then
-                write(*,'(/,A)') "Select circled letters from word puzzle:"
+                write(*,'(/,A)') "Select circled letters from word puzzle (no spaces between letters):"
                 do i = 1, numWords
                     write (*, '(A)', advance='no') solvedWords%list(i)%word
                     write (*, '(A)', advance='no') ": "
