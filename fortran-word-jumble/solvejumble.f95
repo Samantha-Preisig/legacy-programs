@@ -1,12 +1,17 @@
 ! for lexicon.mod: gfortran -c lexicon.f95
 ! gfortran -Wall solvejumble.f95 lexicon.f95
 
+! write(*, "(A)") "I'M PRINTING A STRING"
+! write(*, "(I0)") myInt
+
 program solvejumble
     
     use lexicon
     implicit none
 
     character, dimension(1) :: inputWord
+    integer :: solvedIndex
+    logical :: foundWord
 
     call buildLexicon()
     call inputJumble()
@@ -16,7 +21,7 @@ program solvejumble
         subroutine inputJumble()
 
             integer :: numWords, i, inputLen, j
-            character(len=maxSize) :: input, unjumbled
+            character(len=maxSize) :: input
 
             print *, "How many jumbled words?"
             read (*,*) numWords
@@ -37,31 +42,42 @@ program solvejumble
                     inputWord(j) = achar(iachar(input(j:j)))
                 end do
 
-                call generateAnagram(inputWord, 1, inputLen, unjumbled)
-                ! print *, "anagram found in dictionary: ", unjumbled(1:len(unjumbled))
-                print *, solvedWords%list(1)%word
+                ! call generateAnagram(inputWord, 1, inputLen)
+                ! print *, solvedWords%list(1)%word
+            end do
+
+            do i = 1, numWords
+                solvedIndex = i
+                foundWord = .false.
+                call generateAnagram(jumbledWords%list(i)%word, 1, len(jumbledWords%list(i)%word))
+            end do
+            
+            print *, "The following jumbles have been solved:"
+            do i = 1, numWords
+                print *, jumbledWords%list(i)%word, "   ", solvedWords%list(i)%word
             end do
 
         end subroutine inputJumble
 
-        recursive subroutine generateAnagram(word, left, right, unjumbled)
+        recursive subroutine generateAnagram(word, left, right)
 
             character, dimension(1), intent(inout) :: word
             integer, intent(in) :: left, right
-            character, dimension(1), intent(out) :: unjumbled
-            integer :: i, j=0
+            integer :: i
             logical :: anagramInDic=.false.
 
             if(left == right) then
-                call findAnagram(word(1:right), right, anagramInDic)
-                if(anagramInDic) then
-                    ! print *, "anagram found in dictionary: ", word(1:right)
-                    return
+                if(.not. foundWord) then
+                    call findAnagram(word(1:right), right, anagramInDic)
+                    if(anagramInDic) then
+                        foundWord = .true.
+                        return
+                    end if
                 end if
             else
                 do i = left, right
                     call swap(word, left, i)
-                    call generateAnagram(word, left+1, right, unjumbled)
+                    call generateAnagram(word, left+1, right)
                     call swap(word, left, i)
                 end do
             end if
@@ -89,7 +105,8 @@ program solvejumble
             integer, intent(in) :: wordLen
             logical, intent(inout) :: ret
 
-            call findLex(word, wordLen, ret)
+            ret = .false.
+            call findLex(word, wordLen, solvedIndex, ret)
             if(ret) then
                 ret = .true.
             else

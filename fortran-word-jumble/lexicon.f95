@@ -19,6 +19,7 @@ module lexicon
     character(len=9), parameter :: filename = 'dict2.txt'
     integer, parameter :: fileUnit = 1000
     integer :: lines
+    logical :: found
 
     contains
 
@@ -59,16 +60,16 @@ module lexicon
 
         end function findNumLines
 
-        subroutine findLex(anagram, anagramLen, ret)
+        subroutine findLex(anagram, anagramLen, solvedIndex, ret)
 
             character, dimension(1), intent(in) :: anagram
-            integer, intent(in) :: anagramLen
-            logical, intent(out) :: ret
+            integer, intent(in) :: anagramLen, solvedIndex
+            logical, intent(inout) :: ret
             integer :: i, j, matched=0
             character :: dict_letter
-            logical :: found = .false.
+            logical :: found
 
-
+            found = ret
             do i = 1, lines
                 matched = 0
                 if(len(dictionary%list(i)%word) == anagramLen) then
@@ -76,25 +77,19 @@ module lexicon
                         dict_letter = achar(iachar(dictionary%list(i)%word(j:j)))
                         if(dict_letter == anagram(j)) then
                             matched = matched + 1
-
-                            ! if(anagramLen == matched .and. j == anagramLen) then
-                            !     print *, dictionary%list(i)%word
-                            ! end if
                         end if
                         if(matched == anagramLen .and. j == anagramLen) then
-                            solvedWords%list(1)%word = dictionary%list(i)%word
+                            solvedWords%list(solvedIndex)%word = dictionary%list(i)%word
                             found = .true.
                         end if
-                        if(found) exit
+                        if(found) then
+                            ret = .true.
+                            return
+                        end if
                     end do
                 end if
             end do
-
-            if(found) then
-                ret = .true.
-            else
-                ret = .false.
-            end if
+            ret = .false.
 
         end subroutine findLex
 
