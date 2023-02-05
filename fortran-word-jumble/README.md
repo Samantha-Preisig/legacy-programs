@@ -13,15 +13,15 @@ Run: `./a.out`
 
 ## Word Jumble
 An anagram is a type of word play with the letters of a word or phrase rearranged to produce a new word or phrase.\
-For example, the anagrams of **tea** are: tea, tae, eat, eta, aet, ate.\
+For example, the anagrams of **tea** are: tea, tae, eat, eta, aet, ate.
 ### **First puzzle:** 'Word Jumble'
-The first puzzle (1) takes in a series of jumbled words given by the user, (2) generates all anagrams for each word, and (3) checks if any anagrams exist in the dictionary (provided in 'dict2.txt'). The anagrams appearing in the dictionary are printed as potential solutions to the puzzle.\
+The first puzzle (1) takes in a series of jumbled words given by the user, (2) generates all anagrams for each word, and (3) checks if any anagrams exist in the dictionary (provided in 'dict2.txt'). The anagrams appearing in the dictionary are printed as potential solutions to the puzzle.
 
 ### **Second puzzle:** 'Circled Word Puzzle'
-After the list of given jumbled words have been solved, the user choose letters from each solved word to form another word.\
+After the list of given jumbled words have been solved, the user choose letters from each solved word to form another word.
 
 ## User interface
-The program can run in one of two ways:\
+The program can run in one of two ways:
 1. Enter all jumbled words as a group, process them as a group, then (optional) solve circled word puzzle
 2. Enter each jumbled word with its circled positions one at a time, then process each word individually with the circled word puzzle solved
 
