@@ -54,8 +54,10 @@ module lexicon
         ! of lines in a file given its fileUnit
         integer function findNumLines(f_id) result(numLines)
 
-            integer :: eof
+            ! Function arguments
             integer, intent(in) :: f_id
+
+            integer :: eof
             character(len=1) :: temp
 
             rewind(f_id) ! rewind to the beginning of the file
@@ -80,9 +82,12 @@ module lexicon
             ! ret: used as a return value; true if a match is found, false otherwise
         subroutine findLex(anagram, anagramLen, solvedIndex, ret)
 
+            ! Function arguments
             character, dimension(1), intent(in) :: anagram
             integer, intent(in) :: anagramLen, solvedIndex
             logical, intent(inout) :: ret
+
+            ! Function variables
             integer :: i, j, matched=0 ! matched is a counter
             character :: dict_letter
             logical :: found
