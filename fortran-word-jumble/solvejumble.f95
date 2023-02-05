@@ -1,3 +1,7 @@
+! Word Jumble
+! Authour: Samantha Preisig
+! Date: Feb 5, 2023
+
 program solvejumble
     
     use lexicon
@@ -46,9 +50,13 @@ program solvejumble
             end do
 
             ! Gathering each jumbled word from user and storing into dynamic array called jumbledWords
-            write (*, '(/,A)', advance='no') "Enter the "
-            write (*, '(I2)', advance='no') numWords
-            write (*, '(A)') " jumbled words:"
+            if(jumblePuzzleInput1 == "Y" .or. jumblePuzzleInput1 == "y") then
+                write (*, '(/,A)') "Enter the jumbled word:"
+            else
+                write (*, '(/,A)', advance='no') "Enter the "
+                write (*, '(I2)', advance='no') numWords
+                write (*, '(A)') " jumbled words:"
+            end if
             do i = 1, numWords
                 write (*, '(A)', advance='no') "> "
                 read (*,*) input
@@ -120,7 +128,7 @@ program solvejumble
             if(jumblePuzzleInput1 == "N" .or. jumblePuzzleInput1 == "n") then
                 do while(.not. ((jumblePuzzleInput2 == "Y" .or. jumblePuzzleInput2 == "y") &
                         .or. (jumblePuzzleInput2 == "N" .or. jumblePuzzleInput2 == "n")))
-                    write (*, '(/,A)', advance='no') "Solve word jumble puzzle? [Y/y or N/n] "
+                    write (*, '(/,A)', advance='no') "Solve word jumble puzzle [Y/y or N/n]? "
                     read (*,*) jumblePuzzleInput2
                 end do
             end if
