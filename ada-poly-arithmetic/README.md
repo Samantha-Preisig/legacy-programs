@@ -4,6 +4,7 @@
 - Fix coding style (capitalization with imports, camelCase)
 - Full documentation with headers for each file
 - Explain assignment and user interface in README
+- Error handling for user input
 
 ### Requirements
 

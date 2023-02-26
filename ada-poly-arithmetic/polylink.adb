@@ -1,26 +1,35 @@
 with Ada.Text_IO; use Ada.Text_IO;
 with Ada.Integer_Text_IO; use Ada.Integer_Text_IO;
-with Gnat.IO; -- used when printing text before user input (on same line)
-with Ada.Strings.unbounded; use Ada.Strings.unbounded;
-with Ada.Strings.unbounded.text_io; use Ada.Strings.unbounded.text_io;
 
 package body polylink is
 
 ------------------------------ Variables ------------------------------
 
-
+    idCounter : integer := 0;
 
 ----------------------------- Subprograms -----------------------------
 
-
+    function getListSize(head : in list) return integer is
+        scanPtr : list;
+        counter : integer := 0;
+    begin
+        scanPtr := head;
+        loop
+            exit when scanPtr = null;
+            scanPtr := scanPtr.next;
+            counter := counter + 1;
+        end loop;
+    
+        return counter;
+    end getListSize;
 
 -----------------------------------------------------------------------
 
     procedure buildList(head : in out list; polyArr : in coeffArr; highestE : in integer) is
         newNode : list;
     begin
-        put_line(integer'image(polyArr'length));
-        newNode := new node'(poly=>polyArr, exp=>highestE, next=>null);
+        newNode := new node'(id=>idCounter, poly=>polyArr, exp=>highestE, next=>null);
+        idCounter := idCounter + 1;
         newNode.next := head;
         head := newNode;
     end buildList;
@@ -35,7 +44,6 @@ package body polylink is
         put_line("Enter a polynomial:");
         put("   Highest exponent: ");
         get(highestExp);
-        --  put_line(integer'image(highestExp));
 
         coeffIndex := 0;
         for i in reverse 0..highestExp loop
@@ -44,31 +52,52 @@ package body polylink is
             coeffs(coeffIndex) := coeffInput;
             coeffIndex := coeffIndex + 1;
         end loop;
-
-        --  for i in 0..coeffIndex-1 loop
-        --      put_line(integer'image(coeffs(i)));
-        --  end loop;
+        
         buildList(head, coeffs, highestExp);
-        writePOLY(head);
+        writePOLY(head, idCounter);
     end readPOLY;
 
 -----------------------------------------------------------------------
 
-    procedure writePOLY(head : in list) is
+    procedure writePOLY(head : in list; polyId : in integer) is
         scanPtr : list;
+        j : integer := 0;
     begin
         scanPtr := head;
         loop
             exit when scanPtr = null;
-            --  put(scanPtr.exp);
-            for i in 0..scanPtr.exp loop
-                put(scanPtr.poly(i));
-                put("x^" & integer'image(i) & " + "); -- TODO: needs formatting
-            end loop;
+            if(scanPtr.id = polyId) then
+                for i in reverse 1..scanPtr.exp loop
+                    put(integer'image(scanPtr.poly(j)) & "x^" & integer'image(i) & " + ");
+                    j := j + 1;
+                end loop;
+                put_line(integer'image(scanPtr.poly(j)) & "x^" & integer'image(0));
+            end if;
             scanPtr := scanPtr.next;
-            put_line(", ");
         end loop;
     end writePOLY;
+
+-----------------------------------------------------------------------
+
+    function getAPoly(head : in list; polyId : in integer) return list is
+        aPoly, scanPtr : list;
+        listSize : integer;    
+    begin
+
+        listSize := getListSize(head);
+        scanPtr := head;
+        aPoly := null;
+        loop
+            exit when scanPtr = null;
+            if(scanPtr.id = polyId) then
+                aPoly := scanPtr;
+                return aPoly;
+            end if;
+            scanPtr := scanPtr.next;
+        end loop;
+        return aPoly;
+
+    end getAPoly;
 
 -----------------------------------------------------------------------
 

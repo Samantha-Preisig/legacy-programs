@@ -9,9 +9,10 @@ package polylink is
     type list is access node;
 
     type node is record
-        poly : coeffArr;
-        exp: integer; -- holds highest exponent for a given node/polynomial
-        next : list;
+        id: integer; -- in order to index/identify nodes in linked list
+        poly : coeffArr; -- coefficient array of integers (index representing degree)
+        exp: integer; -- degree of the given node
+        next : list; -- pointer to next node
     end record;
 
     head : list;
@@ -19,7 +20,9 @@ package polylink is
 ----------------------------- Subprograms -----------------------------
 
     procedure buildList(head : in out list; polyArr : in coeffArr; highestE : in integer);
-    procedure readPOLY; -- Reads and stores polynomials given by user input
-    procedure writePOLY(head : in list);
+    procedure readPOLY;
+    procedure writePOLY(head : in list; polyId : in integer);
+    function getListSize(head : in list) return integer;
+    function getAPoly(head : in list; polyId : in integer) return list;
 
 end polylink;
