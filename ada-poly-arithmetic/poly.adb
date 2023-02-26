@@ -11,29 +11,35 @@ procedure poly is
     CR : constant Character := Character'Val(13); -- Carriage return
     LF : constant Character := Character'Val(10); -- Line Feed
     NL : constant String := CR & LF; -- Newline escape sequence
+    
+    highestExp : integer := 100; -- highestExp defaults at 100 (placeholder)
+    type coeffArr is array(0..highestExp) of integer;
 
     type node;
     type list is access node;
 
     type node is record
-        poly : unbounded_string;
+        poly : coeffArr;
         next : list;
     end record;
 
-    aPoly : unbounded_string;
+    cli_choice : integer;
     head : list;
 
 ----------------------------- Subprograms -----------------------------
 
-    procedure buildList(head : in out list; aPoly : in unbounded_string);
+    procedure buildList(head : in out list; polyArr : in coeffArr);
     procedure readPOLY; -- Reads and stores polynomials given by user input
+    procedure writePOLY(head : in list);
+    --  function getCoefficients return coeffsArr;
 
 -----------------------------------------------------------------------
 
-    procedure buildList(head : in out list; aPoly : in unbounded_string) is
+    procedure buildList(head : in out list; polyArr : in coeffArr) is
         newNode : list;
     begin
-        newNode := new node'(poly=>aPoly, next=>null);
+        put_line(integer'image(polyArr'length));
+        newNode := new node'(poly=>polyArr, next=>null);
         newNode.next := head;
         head := newNode;
     end buildList;
@@ -41,16 +47,36 @@ procedure poly is
 -----------------------------------------------------------------------
 
     procedure readPOLY is
-        input_str : string(1..80);
-        length : integer;
+        coeffInput, coeffIndex : integer;
+        coeffStr : unbounded_string;
+        coeffs : coeffArr;
     begin
-        gnat.io.put("Choice? ");
-        get_line(input_str, length);
-        put_line(input_str(input_str'first .. length));
+        put_line("Enter a polynomial:");
+        put("   Highest exponent: ");
+        get(highestExp);
+        put_line(integer'image(highestExp));
+    
+        --  declare
+        --      coeffs : coeffArr(0..highestExp);
+        --  begin
 
-        if input_str = "hi" then
-            put_line("1 was chosen");
-        end if;
+        coeffIndex := 0;
+        for i in reverse 0..highestExp loop
+            put("   Coefficient for x^" & integer'image(i) & ": ");
+            get(coeffInput);
+            --  put_line(integer'image(i));
+            --  put_line(integer'image(coeffInput));
+            put_line(integer'image(coeffIndex));
+            coeffs(coeffIndex) := coeffInput;
+            coeffIndex := coeffIndex + 1;
+        end loop;
+
+        for i in 0..coeffIndex-1 loop
+            put_line(integer'image(coeffs(i)));
+        end loop;
+        buildList(head, coeffs);
+        writePOLY(head);
+        --  end;
     end readPOLY;
 
 -----------------------------------------------------------------------
@@ -61,27 +87,45 @@ procedure poly is
         scanPtr := head;
         loop
             exit when scanPtr = null;
-            put(scanPtr.poly);
+            for i in 0..highestExp loop
+                put(scanPtr.poly(i));
+                put("x^" & integer'image(i) & " + ");
+            end loop;
+            --  put(scanPtr.poly);
+            --  new_line;
             scanPtr := scanPtr.next;
-            put(" ");
+            put_line(", ");
         end loop;
     end writePOLY;
 
 begin
 
-    put_line("POLYNOMIAL Arithmetic");
-    put_line("1. Input a polynomial" & NL & "2. ...");
-    readPOLY;
+    put_line("POLYNOMIAL Arithmetic CLI");
+    put_line("1. Input a polynomial" & NL &
+             "2. Print out a polynomial" & NL &
+             "3. Add two polynomials" & NL &
+             "4. Subtract two polynomials" & NL &
+             "5. Multiply two polynomials" & NL &
+             "6. Evaluate a polynomial" & NL &
+             "7. Quit" & NL);
 
+    --  CLI loop --
     loop
         put("> ");
-        get_line(aPoly);
-        exit when aPoly = "q";
-        buildList(head, aPoly);
+        get(cli_choice);
+
+        if(cli_choice >= 1 or cli_choice <= 7) then
+
+            if cli_choice = 1 then
+                readPOLY;
+            end if;
+            exit when cli_choice = 7;
+        end if;
     end loop;
 
-    put_line("The list as read: ");
-    writePOLY(head);
-    new_line;
+    --  put_line(integer'image(result'length));
+    --  for e of result loop
+    --      put(integer'image(e) & " ");
+    --  end loop;
 
 end poly;
