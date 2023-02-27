@@ -38,7 +38,6 @@ package body polylink is
 
     procedure readPOLY is
         coeffInput, coeffIndex : integer;
-        coeffStr : unbounded_string;
         coeffs : coeffArr;
     begin
         put_line("Enter a polynomial:");

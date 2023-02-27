@@ -11,7 +11,7 @@ procedure poly is
     LF : constant Character := Character'Val(10); -- Line Feed
     NL : constant String := CR & LF; -- Newline escape sequence
 
-    cli_choice, listSize, p1, p2, addLen, j : integer;
+    cli_choice, listSize, p1, p2, newLen, j : integer;
     poly1, poly2 : list;
     retArr : polylink.coeffArr;
 
@@ -51,8 +51,8 @@ begin
                 get(p1);
                 writePOLY(polylink.head, p1);
             
-            -- Add two polynomials --
-            elsif cli_choice = 3 then
+            -- Add, subtract two polynomials --
+            elsif cli_choice = 3 or cli_choice = 4 or cli_choice = 5 then
                 listSize := getListSize(polylink.head);
 
                 -- Error handling: must be at least 2 polynomials in linked list to
@@ -74,32 +74,45 @@ begin
                     poly2 := getAPoly(polylink.head, p2);
                     
                     -- Performing addition by calling addpoly() from polymath package
-                    retArr := polymath.addpoly(poly1, poly2);
+                    if(cli_choice = 3) then
+                        retArr := polymath.addpoly(poly1, poly2);
+                    elsif(cli_choice = 4) then
+                        retArr := polymath.subpoly(poly1, poly2);
+                    elsif(cli_choice = 5) then
+                        retArr := polymath.multpoly(poly1, poly2);
+                    end if;
 
                     -- Gathering info for addition output
-                    if(poly1.exp >= poly2.exp) then
-                        addLen := poly1.exp;
+                    if(cli_choice = 3 or cli_choice = 4) then
+                        if(poly1.exp >= poly2.exp) then
+                            newLen := poly1.exp;
+                        else
+                            newLen := poly2.exp;
+                        end if;
                     else
-                        addLen := poly2.exp;
+                        newLen := poly1.exp + poly2.exp;
                     end if;
 
                     -- Addition output --
+                    new_line;
                     put("  ");
                     writePOLY(polylink.head, p1);
-                    put("+ ");
+                    if(cli_choice = 3) then
+                        put("+ ");
+                    elsif(cli_choice = 4) then
+                        put("- ");
+                    elsif(cli_choice = 5) then
+                        put("x ");
+                    end if;
                     writePOLY(polylink.head, p2);
                     put("= ");
                     j := 0;
-                    for i in reverse 1..addLen loop
+                    for i in reverse 1..newLen loop
                         put(integer'image(retArr(j)) & "x^" & integer'image(i) & " + ");
                         j := j + 1;
                     end loop;
                     put_line(integer'image(retArr(j)) & "x^" & integer'image(0));
                 end if;
-            
-            -- Subtract two polynomials --
-            elsif cli_choice = 4 then
-                put_line("TODO");
 
             end if;
             exit when cli_choice = 7;
