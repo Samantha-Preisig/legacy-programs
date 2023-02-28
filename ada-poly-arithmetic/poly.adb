@@ -6,6 +6,7 @@
 
 with ada.text_io; use ada.text_io;
 with ada.integer_text_io; use ada.integer_text_io;
+with ada.io_exceptions;
 with polylink; use polylink;
 with polymath; use polymath;
 
@@ -17,7 +18,7 @@ procedure poly is
     LF : constant Character := Character'Val(10); -- Line Feed
     NL : constant String := CR & LF; -- Newline escape sequence
 
-    cli_choice, listSize, p1, p2, newLen, j, retVal : integer;
+    cliChoice, listSize, p1, p2, newLen, j, retVal : integer;
     poly1, poly2 : list;
     retArr : polylink.coeffArr;
 
@@ -38,23 +39,31 @@ begin
                  "7. Quit" & NL);
 
         put("> ");
-        get(cli_choice);
+        get(cliChoice);
 
-        if(cli_choice >= 1 or cli_choice <= 7) then
+        if(cliChoice >= 1 or cliChoice <= 7) then
 
             -- Add polynomial to linked list --
-            if(cli_choice = 1) then
+            if(cliChoice = 1) then
                 readPOLY;
             
             -- Print an indexed polynomial --
-            elsif(cli_choice = 2) then
+            elsif(cliChoice = 2) then
+
                 listSize := getListSize(polylink.head);
-                put("Index of polynomial to print out [0.." & integer'image(listSize-1) & "]: ");
-                get(p1);
-                writePOLY(polylink.head, p1);
+
+                if(listSize = 0) then
+                    put_line("There are no polynomials in the linked list" & NL &
+                             "Please enter at least 1 polynomials to use this command");
+                else
+                    put("Index of polynomial to print out [0.." & integer'image(listSize-1) & "]: ");
+                    get(p1);
+                    writePOLY(polylink.head, p1);
+                end if;
             
             -- Add, subtract, multiply two polynomials --
-            elsif(cli_choice = 3 or cli_choice = 4 or cli_choice = 5) then
+            elsif(cliChoice = 3 or cliChoice = 4 or cliChoice = 5) then
+                
                 listSize := getListSize(polylink.head);
 
                 -- Error handling: must be at least 2 polynomials in linked list to
@@ -76,16 +85,16 @@ begin
                     poly2 := getAPoly(polylink.head, p2);
                     
                     -- Performing addition by calling addpoly() from polymath package
-                    if(cli_choice = 3) then
+                    if(cliChoice = 3) then
                         retArr := polymath.addpoly(poly1, poly2);
-                    elsif(cli_choice = 4) then
+                    elsif(cliChoice = 4) then
                         retArr := polymath.subpoly(poly1, poly2);
-                    elsif(cli_choice = 5) then
+                    elsif(cliChoice = 5) then
                         retArr := polymath.multpoly(poly1, poly2);
                     end if;
 
                     -- Gathering info for addition output
-                    if(cli_choice = 3 or cli_choice = 4) then
+                    if(cliChoice = 3 or cliChoice = 4) then
                         if(poly1.exp >= poly2.exp) then
                             newLen := poly1.exp;
                         else
@@ -99,11 +108,11 @@ begin
                     new_line;
                     put("  ");
                     writePOLY(polylink.head, p1);
-                    if(cli_choice = 3) then
+                    if(cliChoice = 3) then
                         put("+ ");
-                    elsif(cli_choice = 4) then
+                    elsif(cliChoice = 4) then
                         put("- ");
-                    elsif(cli_choice = 5) then
+                    elsif(cliChoice = 5) then
                         put("x ");
                     end if;
                     writePOLY(polylink.head, p2);
@@ -117,7 +126,7 @@ begin
                 end if;
 
             -- Evaluate a polynomial --
-            elsif(cli_choice = 6) then
+            elsif(cliChoice = 6) then
             
                 listSize := getListSize(polylink.head);
 
@@ -141,10 +150,14 @@ begin
 
             end if;
 
-            exit when cli_choice = 7;
+            exit when cliChoice = 7;
 
         end if;
-        
+
     end loop;
+
+exception
+    when data_error =>
+        put_line("Invalid input, must be an integer");
 
 end poly;
