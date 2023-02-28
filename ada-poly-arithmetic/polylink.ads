@@ -1,3 +1,7 @@
+-- Package specification for polylink containing subprogram declarations
+-- Authour: Samantha Preisig
+-- Date: Mar 3, 2023
+
 package polylink is
 
 ------------------------------ Variables ------------------------------

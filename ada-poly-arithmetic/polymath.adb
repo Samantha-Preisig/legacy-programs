@@ -1,19 +1,20 @@
-with Ada.Text_IO; use Ada.Text_IO;
-with Ada.Integer_Text_IO; use Ada.Integer_Text_IO;
+-- Package body for polymath containing subprogram definitions
+-- Authour: Samantha Preisig
+-- Date: Mar 3, 2023
+
+with ada.text_io; use ada.text_io;
+with ada.integer_text_io; use ada.integer_text_io;
 with polylink; use polylink;
 
 package body polymath is
 
------------------------------- Variables ------------------------------
-
-
-
 ----------------------------- Subprograms -----------------------------
 
+    -- Adds two polynomials together (poly1 + poly2)
     function addpoly(poly1 : in polylink.list; poly2 : in polylink.list) return polylink.coeffArr is
 
         retArr : polylink.coeffArr;
-        diffLens, smallestLen, largestLen, index, j : integer;
+        diffLens, smallestLen, largestLen, index : integer;
 
     begin
 
@@ -32,43 +33,22 @@ package body polymath is
             largestLen := poly1.exp;
             diffLens := 1; -- Both polynomials are of different degrees
         else
-            smallestLen := poly1.exp;
+            largestLen := poly1.exp;
         end if;
 
-        --  index := 0; -- retArr's index
-        --  -- Like terms only exist with terms less than or equal to the lower-degree polynomial, therefore
-        --  -- addition is only performed on this subset of values
-        --  for i in 0..smallestLen loop
-        --      retArr(index) := poly1.poly(i) + poly2.poly(i);
-        --      index := index + 1;
-        --  end loop;
-
-        --  j := index; -- j bookmarks retArr's current index after performing addition
-        --  if(diffLens = 1) then
-        --      -- Storing the terms of higher degree in retArr
-        --      for i in j..largestLen loop
-        --          if(poly1.exp = largestLen) then
-        --              retArr(index) := poly1.poly(i);
-        --          else
-        --              retArr(index) := poly2.poly(i);
-        --          end if;
-        --          index := index + 1;
-        --      end loop;
-        --  end if;
-
-        index := largestLen;
-        if(diffLens = 1) then
-            for i in 0..largestLen loop
-                if(poly1.poly(i) = 0) then
-                    retArr(index) := poly2.poly(i);
-                elsif(poly2.poly(i) = 0) then
-                    retArr(index) := poly1.poly(i);
-                else
-                    retArr(index) := poly1.poly(i) + poly2.poly(i);
-                end if;
-                index := index - 1;
-            end loop;
-        end if;
+        -- Building retArr from largest index (largest exponent) to 0 to replicate the polynomial
+        -- arrays in linked list
+        index := largestLen; -- retArr's index
+        for i in 0..largestLen loop
+            if(poly1.poly(i) = 0) then -- no x^i term in poly1
+                retArr(index) := poly2.poly(i);
+            elsif(poly2.poly(i) = 0) then -- no x^i term in poly2
+                retArr(index) := poly1.poly(i);
+            else
+                retArr(index) := poly1.poly(i) + poly2.poly(i);
+            end if;
+            index := index - 1;
+        end loop;
         
         return retArr;
 
@@ -76,10 +56,11 @@ package body polymath is
 
 -----------------------------------------------------------------------
 
+    -- Subtracts one polynomial from another (poly1 - poly2)
     function subpoly(poly1 : in polylink.list; poly2 : in polylink.list) return polylink.coeffArr is
 
         retArr : polylink.coeffArr;
-        diffLens, smallestLen, largestLen, index, j : integer;
+        diffLens, smallestLen, largestLen, index : integer;
 
     begin
 
@@ -98,44 +79,23 @@ package body polymath is
             largestLen := poly1.exp;
             diffLens := 1; -- Both polynomials are of different degrees
         else
-            smallestLen := poly1.exp;
+            largestLen := poly1.exp;
         end if;
 
-        index := 0; -- retArr's index
-        --  -- Like terms only exist with terms less than or equal to the lower-degree polynomial, therefore
-        --  -- addition is only performed on this subset of values
-        --  for i in 0..smallestLen loop
-        --      retArr(index) := poly1.poly(i) - poly2.poly(i);
-        --      index := index + 1;
-        --  end loop;
-
-        --  j := index; -- j bookmarks retArr's current index after performing addition
-        --  if(diffLens = 1) then
-        --      -- Storing the terms of higher degree in retArr
-        --      for i in j..largestLen loop
-        --          if(poly1.exp = largestLen) then
-        --              retArr(index) := poly1.poly(i);
-        --          else
-        --              -- poly2 is being subtracted from poly1, therefore leftover terms are negative
-        --              retArr(index) := poly2.poly(i);
-        --          end if;
-        --          index := index + 1;
-        --      end loop;
-        --  end if;
-
-        index := largestLen;
-        if(diffLens = 1) then
-            for i in 0..largestLen loop
-                if(poly1.poly(i) = 0) then
-                    retArr(index) := poly2.poly(i)*(-1);
-                elsif(poly2.poly(i) = 0) then
-                    retArr(index) := poly1.poly(i);
-                else
-                    retArr(index) := poly1.poly(i) - poly2.poly(i);
-                end if;
-                index := index - 1;
-            end loop;
-        end if;
+        -- Building retArr from largest index (largest exponent) to 0 to replicate the polynomial
+        -- arrays in linked list
+        index := largestLen; -- retArr's index
+        for i in 0..largestLen loop
+            if(poly1.poly(i) = 0) then -- no x^i term in poly1
+                -- poly2 is being subtracted from poly1, therefore it's negative (if there is no like-term)
+                retArr(index) := poly2.poly(i)*(-1);
+            elsif(poly2.poly(i) = 0) then -- no x^i term in poly2
+                retArr(index) := poly1.poly(i);
+            else
+                retArr(index) := poly1.poly(i) - poly2.poly(i);
+            end if;
+            index := index - 1;
+        end loop;
         
         return retArr;
 
@@ -143,6 +103,7 @@ package body polymath is
 
 -----------------------------------------------------------------------
 
+    -- Multiplies one polynomial by another (poly1 * poly2)
     function multpoly(poly1 : in polylink.list; poly2 : in polylink.list) return polylink.coeffArr is
 
         retArr : polylink.coeffArr;
@@ -171,8 +132,20 @@ package body polymath is
 
 -----------------------------------------------------------------------
 
-begin
+    -- Evaluates a polynomial with a given value x
+    function evalpoly(poly1 : in polylink.list; x : in integer) return integer is
 
-    put("stub");
+        ret : integer := 0;
+
+    begin
+
+        for i in 1..poly1.exp loop
+            ret := ret + poly1.poly(i)*(x**i);
+        end loop;
+        ret := ret + poly1.poly(0); -- add constant
+        
+        return ret;
+
+    end evalpoly;
 
 end polymath;
