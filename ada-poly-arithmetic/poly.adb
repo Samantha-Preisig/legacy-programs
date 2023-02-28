@@ -157,7 +157,7 @@ begin
     end loop;
 
 exception
-    when data_error =>
+    when ada.io_exceptions.data_error =>
         put_line("Invalid input, must be an integer");
 
 end poly;
