@@ -111,7 +111,7 @@ begin
                         put(integer'image(retArr(j)) & "x^" & integer'image(i) & " + ");
                         j := j + 1;
                     end loop;
-                    put_line(integer'image(retArr(j)) & "x^" & integer'image(0));
+                    put_line(integer'image(retArr(j)));
                 end if;
 
             end if;

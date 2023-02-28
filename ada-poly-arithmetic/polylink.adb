@@ -45,7 +45,7 @@ package body polylink is
         get(highestExp);
 
         coeffIndex := 0;
-        for i in reverse 0..highestExp loop
+        for i in 0..highestExp loop -- for i in reverse 0..highestExp loop
             put("   Coefficient for x^" & integer'image(i) & ": ");
             get(coeffInput);
             coeffs(coeffIndex) := coeffInput;
@@ -66,11 +66,17 @@ package body polylink is
         loop
             exit when scanPtr = null;
             if(scanPtr.id = polyId) then
+                --  for i in reverse 1..scanPtr.exp loop
+                --      put(integer'image(scanPtr.poly(j)) & "x^" & integer'image(i) & " + ");
+                --      j := j + 1;
+                --  end loop;
+                --  put_line(integer'image(scanPtr.poly(j)));
+
                 for i in reverse 1..scanPtr.exp loop
-                    put(integer'image(scanPtr.poly(j)) & "x^" & integer'image(i) & " + ");
+                    put(integer'image(scanPtr.poly(i)) & "x^" & integer'image(i) & " + ");
                     j := j + 1;
                 end loop;
-                put_line(integer'image(scanPtr.poly(j)) & "x^" & integer'image(0));
+                put_line(integer'image(scanPtr.poly(0)));
             end if;
             scanPtr := scanPtr.next;
         end loop;

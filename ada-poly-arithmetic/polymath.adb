@@ -35,24 +35,38 @@ package body polymath is
             smallestLen := poly1.exp;
         end if;
 
-        index := 0; -- retArr's index
-        -- Like terms only exist with terms less than or equal to the lower-degree polynomial, therefore
-        -- addition is only performed on this subset of values
-        for i in 0..smallestLen loop
-            retArr(index) := poly1.poly(i) + poly2.poly(i);
-            index := index + 1;
-        end loop;
+        --  index := 0; -- retArr's index
+        --  -- Like terms only exist with terms less than or equal to the lower-degree polynomial, therefore
+        --  -- addition is only performed on this subset of values
+        --  for i in 0..smallestLen loop
+        --      retArr(index) := poly1.poly(i) + poly2.poly(i);
+        --      index := index + 1;
+        --  end loop;
 
-        j := index; -- j bookmarks retArr's current index after performing addition
+        --  j := index; -- j bookmarks retArr's current index after performing addition
+        --  if(diffLens = 1) then
+        --      -- Storing the terms of higher degree in retArr
+        --      for i in j..largestLen loop
+        --          if(poly1.exp = largestLen) then
+        --              retArr(index) := poly1.poly(i);
+        --          else
+        --              retArr(index) := poly2.poly(i);
+        --          end if;
+        --          index := index + 1;
+        --      end loop;
+        --  end if;
+
+        index := largestLen;
         if(diffLens = 1) then
-            -- Storing the terms of higher degree in retArr
-            for i in j..largestLen loop
-                if(poly1.exp = largestLen) then
+            for i in 0..largestLen loop
+                if(poly1.poly(i) = 0) then
+                    retArr(index) := poly2.poly(i);
+                elsif(poly2.poly(i) = 0) then
                     retArr(index) := poly1.poly(i);
                 else
-                    retArr(index) := poly2.poly(i);
+                    retArr(index) := poly1.poly(i) + poly2.poly(i);
                 end if;
-                index := index + 1;
+                index := index - 1;
             end loop;
         end if;
         
@@ -88,23 +102,38 @@ package body polymath is
         end if;
 
         index := 0; -- retArr's index
-        -- Like terms only exist with terms less than or equal to the lower-degree polynomial, therefore
-        -- addition is only performed on this subset of values
-        for i in 0..smallestLen loop
-            retArr(index) := poly1.poly(i) - poly2.poly(i);
-            index := index + 1;
-        end loop;
+        --  -- Like terms only exist with terms less than or equal to the lower-degree polynomial, therefore
+        --  -- addition is only performed on this subset of values
+        --  for i in 0..smallestLen loop
+        --      retArr(index) := poly1.poly(i) - poly2.poly(i);
+        --      index := index + 1;
+        --  end loop;
 
-        j := index; -- j bookmarks retArr's current index after performing addition
+        --  j := index; -- j bookmarks retArr's current index after performing addition
+        --  if(diffLens = 1) then
+        --      -- Storing the terms of higher degree in retArr
+        --      for i in j..largestLen loop
+        --          if(poly1.exp = largestLen) then
+        --              retArr(index) := poly1.poly(i);
+        --          else
+        --              -- poly2 is being subtracted from poly1, therefore leftover terms are negative
+        --              retArr(index) := poly2.poly(i);
+        --          end if;
+        --          index := index + 1;
+        --      end loop;
+        --  end if;
+
+        index := largestLen;
         if(diffLens = 1) then
-            -- Storing the terms of higher degree in retArr
-            for i in j..largestLen loop
-                if(poly1.exp = largestLen) then
+            for i in 0..largestLen loop
+                if(poly1.poly(i) = 0) then
+                    retArr(index) := poly2.poly(i)*(-1);
+                elsif(poly2.poly(i) = 0) then
                     retArr(index) := poly1.poly(i);
                 else
-                    retArr(index) := poly2.poly(i);
+                    retArr(index) := poly1.poly(i) - poly2.poly(i);
                 end if;
-                index := index + 1;
+                index := index - 1;
             end loop;
         end if;
         
