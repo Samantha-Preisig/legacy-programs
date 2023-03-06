@@ -21,6 +21,7 @@ The `polylink` package contains all subprograms dealing with the linked list; pr
 ## Assumptions/Limitations
 - Coefficients and exponents of a given polynomial are integers
 - Error handling and their respective messages are not extensive
+- Sometimes irregular behaviour when adding negative polynomials --> TODO: fix
 
 ## CLI demo
 ```
