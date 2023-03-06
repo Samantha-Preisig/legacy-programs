@@ -116,11 +116,9 @@ package body polylink is
     function getAPoly(head : in list; polyId : in integer) return list is
 
         scanPtr : list;
-        listSize : integer;
 
     begin
 
-        listSize := getListSize(head);
         scanPtr := head;
         loop
             exit when scanPtr = null;

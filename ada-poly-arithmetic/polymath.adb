@@ -2,9 +2,7 @@
 -- Authour: Samantha Preisig
 -- Date: Mar 3, 2023
 
-with ada.text_io; use ada.text_io;
-with ada.integer_text_io; use ada.integer_text_io;
-with polylink; use polylink;
+--  with polylink; use polylink;
 
 package body polymath is
 
@@ -14,24 +12,16 @@ package body polymath is
     function addpoly(poly1 : in polylink.list; poly2 : in polylink.list) return polylink.coeffArr is
 
         retArr : polylink.coeffArr;
-        diffLens, smallestLen, largestLen, index : integer;
+        largestLen, index : integer;
 
     begin
 
-        diffLens := 0; -- Both polynomials are of the same degree
-        -- Finding information about each polynomial:
-        --  - the polynomial with the lowest degree: all terms less than or equal to this degree will
-        -- be added together
-        --  - the polynomial with the highest degree: all terms above the lower degree value will be
+        -- Finding the polynomial with the highest degree: all terms above the lower degree value will be
         -- stored in retArr (no like-terms beyond the degree of the lower-degree polynomial)
         if(poly1.exp < poly2.exp) then
-            smallestLen := poly1.exp;
             largestLen := poly2.exp;
-            diffLens := 1; -- Both polynomials are of different degrees
         elsif(poly1.exp > poly1.exp) then
-            smallestLen := poly2.exp;
             largestLen := poly1.exp;
-            diffLens := 1; -- Both polynomials are of different degrees
         else
             largestLen := poly1.exp;
         end if;
@@ -60,24 +50,16 @@ package body polymath is
     function subpoly(poly1 : in polylink.list; poly2 : in polylink.list) return polylink.coeffArr is
 
         retArr : polylink.coeffArr;
-        diffLens, smallestLen, largestLen, index : integer;
+        largestLen, index : integer;
 
     begin
 
-        diffLens := 0; -- Both polynomials are of the same degree
-        -- Finding information about each polynomial:
-        --  - the polynomial with the lowest degree: all terms less than or equal to this degree will
-        -- be added together
-        --  - the polynomial with the highest degree: all terms above the lower degree value will be
+        -- Finding the polynomial with the highest degree: all terms above the lower degree value will be
         -- stored in retArr (no like-terms beyond the degree of the lower-degree polynomial)
         if(poly1.exp < poly2.exp) then
-            smallestLen := poly1.exp;
             largestLen := poly2.exp;
-            diffLens := 1; -- Both polynomials are of different degrees
         elsif(poly1.exp > poly1.exp) then
-            smallestLen := poly2.exp;
             largestLen := poly1.exp;
-            diffLens := 1; -- Both polynomials are of different degrees
         else
             largestLen := poly1.exp;
         end if;
