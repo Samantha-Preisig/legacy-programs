@@ -30,7 +30,8 @@ begin
     loop
         -- Menu --
         put_line(NL & "----------- POLYNOMIAL Arithmetic CLI -----------");
-        put_line("1. Input a polynomial" & NL &
+        put_line("Enter a number to perform one of the following commands:" & NL &
+                 "1. Input a polynomial" & NL &
                  "2. Print a polynomial" & NL &
                  "3. Add two polynomials" & NL &
                  "4. Subtract two polynomials" & NL &

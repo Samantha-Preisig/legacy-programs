@@ -1,10 +1,5 @@
 # Polynomial Arithmetic
 
-# TODO
-- Error handling for user input
-
-### Requirements
-
 ### Compile and run
 Compile: `gnatmake -Wall poly.adb`\
 Run: `./poly`
@@ -19,7 +14,9 @@ In this assignment, a polynomial is stored in a node which is then added to a li
 `next : list;` -- pointer to next node\
 
 With a populated linked list of polynomials, we can now perform addition, subtraction, and multiplication on 2 polynomials. We can also evaluate a polynomial with a given value\
-These math functions are found in the `polymath` package
+These math functions are found in the `polymath` package\
+The `polylink` package contains all subprograms dealing with the linked list; printing, appending, retrieving size, and retrieving a specific polynomial\
+`poly.adb` is a wrapper program which interacts with both `polylink` and `polymath` packages to create a CLI program to build a linked list and perform math on chosen nodes in the list
 
 ## Assumptions/Limitations
 - Coefficients and exponents of a given polynomial are integers
@@ -28,6 +25,7 @@ These math functions are found in the `polymath` package
 ## CLI demo
 ```
 ----------- POLYNOMIAL Arithmetic CLI -----------
+Enter a number to perform one of the following commands:
 1. Input a polynomial
 2. Print a polynomial
 3. Add two polynomials
@@ -44,6 +42,7 @@ Enter a polynomial:
    Coefficient for x^ 2: 3
 
 ----------- POLYNOMIAL Arithmetic CLI -----------
+Enter a number to perform one of the following commands:
 1. Input a polynomial
 2. Print a polynomial
 3. Add two polynomials
@@ -57,6 +56,7 @@ Index of polynomial to print out [0.. 0]: 0
  3x^ 2 +  2x^ 1 +  1
 
 ----------- POLYNOMIAL Arithmetic CLI -----------
+Enter a number to perform one of the following commands:
 1. Input a polynomial
 2. Print a polynomial
 3. Add two polynomials
@@ -74,6 +74,7 @@ Enter a polynomial:
    Coefficient for x^ 3: 4
 
 ----------- POLYNOMIAL Arithmetic CLI -----------
+Enter a number to perform one of the following commands:
 1. Input a polynomial
 2. Print a polynomial
 3. Add two polynomials
@@ -92,6 +93,7 @@ You will be adding two polynomials, p1 and p2
 =  4x^ 3 +  6x^ 2 +  4x^ 1 +  2
 
 ----------- POLYNOMIAL Arithmetic CLI -----------
+Enter a number to perform one of the following commands:
 1. Input a polynomial
 2. Print a polynomial
 3. Add two polynomials
@@ -106,6 +108,7 @@ You will be adding two polynomials, p1 and p2
 f(x) =  3x^ 2 +  2x^ 1 +  1
 f( 2) =  17
 ----------- POLYNOMIAL Arithmetic CLI -----------
+Enter a number to perform one of the following commands:
 1. Input a polynomial
 2. Print a polynomial
 3. Add two polynomials
