@@ -173,7 +173,7 @@ procedure textyzer is
             for i in 1..length(sline) loop
                 if(element(sline, i) = '.' or
                    element(sline, i) = '!' or
-                   element(sline, i) = '?' or) then
+                   element(sline, i) = '?') then
                     counter := counter + 1;
                 end if;
             end loop;
@@ -229,41 +229,68 @@ procedure textyzer is
 
 -----------------------------------------------------------------------
 
-begin
+    -- Uses global text statistics to print summary to stdout
+    procedure printStats is
 
-    filename := getFilename;
-    -- Initiallizing all elements in word distribution array to 0 before analyzing text
-    for i in 1..20 loop
-        wordDist(i) := 0;
-    end loop;
+    begin
 
-    analyzeText; -- Populates all statistics
-    -- Calculating averages
-    charPerWord := float(charCount/wordCount);
-    wordsPerSentence := float(wordCount/sentenceCount);
-    
-    -- Printing text statistics
-    put_line(NL & "Here are some stats:" & NL &
+        put_line("Here are some stats:" & NL &
              "Character count (a-z)      : " & integer'image(charCount) & NL &
              "Word count                 : " & integer'image(wordCount) & NL &
              "Sentence count             : " & integer'image(sentenceCount) & NL &
              "Number count               : " & integer'image(numCount) & NL &
              "Punctuation count          : " & integer'image(punctCount));
-    put("Characters per word        :  ");
-    put(charPerWord, 1, 1, 0);
-    put(NL & "Words per sentence         :  ");
-    put(wordsPerSentence, 1, 1, 0);
+        put("Characters per word        :  ");
+        put(charPerWord, 1, 1, 0);
+        put(NL & "Words per sentence         :  ");
+        put(wordsPerSentence, 1, 1, 0);
+
+    end printStats;
+
+-----------------------------------------------------------------------
+
+    -- Uses global word length distribution array to print histogram to stdout
+    procedure printHist is
+
+    begin
+
+        put_line("Histogram - Word Length Distribution");
+        for i in 1..20 loop
+            put(item => i, width => 2);
+            put("   ");
+            for j in 1..wordDist(i) loop
+                put("*");
+            end loop;
+            put(NL);
+        end loop;
+
+    end printHist;
+
+-----------------------------------------------------------------------
+
+begin
+
+    filename := getFilename;
+    
+    -- Initiallizing all elements in word distribution array to 0 before analyzing text
+    for i in 1..20 loop
+        wordDist(i) := 0;
+    end loop;
+
+    -- Populates all statistics
+    analyzeText;
+    
+    -- Calculating averages
+    charPerWord := float(charCount/wordCount);
+    wordsPerSentence := float(wordCount/sentenceCount);
+    
+    -- Printing text statistics
+    put(NL);
+    printStats;
 
     -- Printing histogram
     put_line(NL);
-    put_line("Histogram - Word Length Distribution");
-    for i in 1..20 loop
-        put(item => i, width => 2);
-        put("   ");
-        for j in 1..wordDist(i) loop
-            put("*");
-        end loop;
-        put(NL);
-    end loop;
+    printHist;
+    
 
 end textyzer;
