@@ -8,6 +8,7 @@ with ada.strings.fixed; use ada.strings.fixed;
 with ada.strings.maps; use ada.strings.maps;
 with ada.strings.bounded; use ada.strings.bounded;
 with gnat.string_split; use gnat.string_split;
+with ada.float_text_io; use ada.float_text_io;
 
 procedure textyzer is
 
@@ -23,6 +24,7 @@ procedure textyzer is
 
     -- Stats
     charCount, wordCount, sentenceCount, numCount, punctCount : integer := 0;
+    charPerWord, wordsPerSentence : float := 0.0;
 
 ----------------------------- Subprograms -----------------------------
 
@@ -76,6 +78,12 @@ procedure textyzer is
     begin
 
         if(isNumeric(word)) then
+            for i in 1..length(unboundedWord) loop
+                if(element(unboundedWord, i) = '.' or
+                   element(unboundedWord, i) = '-') then
+                   punctCount := punctCount + 1;
+                end if;
+            end loop;
             return true;
         end if;
                     
@@ -86,9 +94,9 @@ procedure textyzer is
             elsif (element(unboundedWord, i) in 'a'..'z' or
                    element(unboundedWord, i) in 'A'..'Z') then
                 charCount := charCount + 1;
-                put_line("Char mark: " & element(unboundedWord, i));
+                --  put_line("Char mark: " & element(unboundedWord, i));
             else
-                put_line("Punct mark: " & element(unboundedWord, i));
+                --  put_line("Punct mark: " & element(unboundedWord, i));
                 punctCount := punctCount + 1;
             end if;
         end loop;
@@ -116,9 +124,9 @@ procedure textyzer is
             elsif (element(unboundedWord, i) in 'a'..'z' or
                    element(unboundedWord, i) in 'A'..'Z') then
                 charCount := charCount + 1;
-                put_line("Char mark: " & element(unboundedWord, i));
+                --  put_line("Char mark: " & element(unboundedWord, i));
             else
-                put_line("Punct mark: " & element(unboundedWord, i));
+                --  put_line("Punct mark: " & element(unboundedWord, i));
                 punctCount := punctCount + 1;
             end if;
         end loop;
@@ -197,16 +205,24 @@ procedure textyzer is
     end analyzeText;
 
 -----------------------------------------------------------------------
+    tmp : integer;
 
 begin
 
     filename := getFilename;
     analyzeText(filename);
+
+    charPerWord := float(charCount/wordCount);
+    wordsPerSentence := float(wordCount/sentenceCount);
     
     put_line("Character count (a-z)      : " & integer'image(charCount) & NL &
              "Word count                 : " & integer'image(wordCount) & NL &
              "Sentence count             : " & integer'image(sentenceCount) & NL &
              "Number count               : " & integer'image(numCount) & NL &
              "Punctuation count          : " & integer'image(punctCount));
+    put("Characters per word        :  ");
+    put(charPerWord, 1, 1, 0);
+    put(NL & "Words per sentence         :  ");
+    put(wordsPerSentence, 1, 1, 0);
 
 end textyzer;
