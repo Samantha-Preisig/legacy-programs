@@ -25,6 +25,7 @@ procedure textyzer is
     -- Stats
     charCount, wordCount, sentenceCount, numCount, punctCount : integer := 0;
     charPerWord, wordsPerSentence : float := 0.0;
+    wordDist : array(1..20) of integer;
 
 ----------------------------- Subprograms -----------------------------
 
@@ -131,6 +132,7 @@ procedure textyzer is
             end if;
         end loop;
 
+        wordDist(length(unboundedWord)) := wordDist(length(unboundedWord)) + 1;
         return true;
     
     end isWord;
@@ -179,6 +181,7 @@ procedure textyzer is
             for i in 1..slice_count(tokens) loop
                 if(isWord(slice(tokens, i))) then
                     wordCount := wordCount + 1;
+                    --  wordDist(length(slice(tokens, i))) := wordDist(length(slice(tokens, i))) + 1;
                 elsif(isNumber(slice(tokens, i))) then
                     numCount := numCount + 1;
                 end if;
@@ -205,17 +208,21 @@ procedure textyzer is
     end analyzeText;
 
 -----------------------------------------------------------------------
-    tmp : integer;
 
 begin
 
     filename := getFilename;
-    analyzeText(filename);
+    -- Setting all elements in word distribution array to 0 before analyzing text
+    for i in 1..20 loop
+        wordDist(i) := 0;
+    end loop;
 
+    analyzeText(filename);
     charPerWord := float(charCount/wordCount);
     wordsPerSentence := float(wordCount/sentenceCount);
     
-    put_line("Character count (a-z)      : " & integer'image(charCount) & NL &
+    put_line(NL & "Here are some stats:" & NL &
+             "Character count (a-z)      : " & integer'image(charCount) & NL &
              "Word count                 : " & integer'image(wordCount) & NL &
              "Sentence count             : " & integer'image(sentenceCount) & NL &
              "Number count               : " & integer'image(numCount) & NL &
@@ -224,5 +231,17 @@ begin
     put(charPerWord, 1, 1, 0);
     put(NL & "Words per sentence         :  ");
     put(wordsPerSentence, 1, 1, 0);
+
+    put_line(NL);
+    put_line("Histogram - Word Length Distribution");
+    for i in 1..20 loop
+        put(item => i, width => 2);
+        --  put(item => wordDist(i), width => 5);
+        put("   ");
+        for j in 1..wordDist(i) loop
+            put("*");
+        end loop;
+        put(NL);
+    end loop;
 
 end textyzer;

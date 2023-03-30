@@ -18,14 +18,15 @@ The analysis involves calculating the following numerics:
 
 ## Algorithm synopsis
 - User is prompted for a filename
-- Perform error checking to amke sure file exists
-- Read and process file to calculate quantative values above
+- Perform error checking to make sure file exists
+- Read and process text file to calculate quantative values (listed above)
 - Output statistics to stdout
 
 ## Assumptions
 - Sentences are split by periods
-- Words only contain alphabetical characters (a..z)
-- Numbers can only contain number characters (0-9 and '.' for decimal)
-- Text such as `a4, sam.12, 12_34-56` are neither words nor numbers
+- Words only contain alphabetical characters (a..z, A..Z)
+- Numbers can only contain numerical characters (0-9, '.' for decimal, and '-' for negatives)
+    - However, '.' and '-' will be counted towards punctuation, no matter the context
+- Text such as `a4, sam.12, 12_34-56` are neither words nor numbers. Therefore, they will not be represented within the final stats
 
 ## Testing
