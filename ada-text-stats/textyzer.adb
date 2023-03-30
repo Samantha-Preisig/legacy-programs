@@ -1,3 +1,7 @@
+-- Text statistics in Ada
+-- Authour: Samantha Preisig
+-- Date: Apr 8, 2023
+
 with ada.text_io; use ada.text_io;
 with ada.integer_text_io; use ada.integer_text_io;
 with ada.strings.unbounded; use ada.strings.unbounded;
