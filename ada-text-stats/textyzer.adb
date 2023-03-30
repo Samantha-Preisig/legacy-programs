@@ -13,7 +13,16 @@ procedure textyzer is
 
 ------------------------------ Variables ------------------------------
 
+    CR : constant Character := Character'Val(13); -- Carriage return
+    LF : constant Character := Character'Val(10); -- Line Feed
+    NL : constant String := CR & LF; -- Newline escape sequence
+
     filename : unbounded_string;
+    infp : file_type;
+    sline : unbounded_string;
+
+    -- Stats
+    wordCount, sentenceCount, numCount : integer := 0;
 
 ----------------------------- Subprograms -----------------------------
 
@@ -41,75 +50,154 @@ procedure textyzer is
 
 -----------------------------------------------------------------------
 
-    -- Reference: https://learn.adacore.com/courses/intro-to-ada/chapters/standard_library_strings.html#string-operations
-    -- Reads the file line by line, breaking each line up into individual words.
-    procedure analyzeText(filename : unbounded_string) is
-        
-        -- Reading/parsing file
-        infp : file_type;
-        sline : unbounded_string;
-        tokens : slice_set;
-        line : unbounded_string;
+    function isNumeric(word : in string) return boolean is
 
-        -- Stats
-        charCount, wordCount, sentenceCounter : integer := 0;
+        dummy : float;
+    
+    begin
+
+        dummy := float'value(word);
+        --  numCount := numCount + 1;
+        return true;
+
+    exception
+
+        when others =>
+            return false;
+
+    end isNumeric;
+
+-----------------------------------------------------------------------
+
+    function isNumber(word : in string) return boolean is
+    
+        unboundedWord : unbounded_string := to_unbounded_string(word);
 
     begin
 
-        --  open(infp, in_file, to_string(filename));
-        --  loop
-        --      exit when end_of_file(infp);
-        --      -- Process each line from the file
-        --      get_line(infp,sline);
-        --      put_line(sline);
-        --      -- do something with the line of text
-        --  end loop;
+        if(isNumeric(word)) then
+            return true;
+        end if;
+                    
+        -- Check if word has any numbers in it
+        for i in 1..length(unboundedWord) loop
+            if not (element(unboundedWord, i) = '0' or
+               element(unboundedWord, i) = '1' or
+               element(unboundedWord, i) = '2' or
+               element(unboundedWord, i) = '3' or
+               element(unboundedWord, i) = '4' or
+               element(unboundedWord, i) = '5' or
+               element(unboundedWord, i) = '6' or
+               element(unboundedWord, i) = '7' or
+               element(unboundedWord, i) = '8' or
+               element(unboundedWord, i) = '9' or
+               element(unboundedWord, i) = '-') then
+                return false;
+            end if;
+        end loop;
+
+        return true;
+
+    end isNumber;
+
+-----------------------------------------------------------------------
+
+    function isWord(word : in string) return boolean is
+
+        unboundedWord : unbounded_string := to_unbounded_string(word);
+
+    begin
+
+        if(isNumeric(word)) then
+            return false;
+        end if;
+                    
+        -- Check if word has any numbers in it
+        for i in 1..length(unboundedWord) loop
+            if(element(unboundedWord, i) = '0' or
+               element(unboundedWord, i) = '1' or
+               element(unboundedWord, i) = '2' or
+               element(unboundedWord, i) = '3' or
+               element(unboundedWord, i) = '4' or
+               element(unboundedWord, i) = '5' or
+               element(unboundedWord, i) = '6' or
+               element(unboundedWord, i) = '7' or
+               element(unboundedWord, i) = '8' or
+               element(unboundedWord, i) = '9') then
+                return false;
+            end if;
+        end loop;
+
+        return true;
+    
+    end isWord;
+
+-----------------------------------------------------------------------
+
+    procedure countSentences is
+
+        counter : integer := 0;
+
+    begin
 
         open(infp, in_file, to_string(filename));
 
         loop
             exit when end_of_file(infp);
-            -- Process each line from the file
-            get_line(infp,sline);
-            --  put_line(sline);
-
-            --  create(tokens, get_line(infp), " ", multiple);
-            
-            --  -- Loop through words in line
-            --  for i in 1..slice_count(tokens) loop
-            --      put_line(slice(tokens, i));            
-            --  end loop;
+            get_line(infp, sline);
 
             for i in reverse 1..length(sline) loop
-                --  put(element(line, i) & " ");
                 if(element(sline, i) = '.') then
-                    sentenceCounter := sentenceCounter + 1;
+                    counter := counter + 1;
                 end if;
             end loop;
-            put_line("Sentence counter = " & integer'image(sentenceCounter));
+
         end loop;
 
-        --  while not end_of_file(infp) loop
-        --      line := get_line(infp);
-        --      create(tokens, get_line(infp), " ", multiple);
+        close(infp);
+        sentenceCount := counter;
+
+    end countSentences;
+
+-----------------------------------------------------------------------
+
+    procedure countWords is
+
+        tokens : slice_set;
+
+    begin
+    
+        open(infp, in_file, to_string(filename));
+
+        while not end_of_file(infp) loop
+            create(tokens, get_line(infp), " ", multiple);
             
+            -- Loop through words in line
+            for i in 1..slice_count(tokens) loop
+                if(isWord(slice(tokens, i))) then
+                    wordCount := wordCount + 1;
+                elsif(isNumber(slice(tokens, i))) then
+                    numCount := numCount + 1;
+                end if;
+                --  put_line(slice(tokens, i));
+            end loop;
 
-        --      -- Loop through words in line
-        --      for i in 1..slice_count(tokens) loop
-        --          put_line(slice(tokens, i));            
-        --      end loop;
-
-        --      --  for i in reverse 1..length(line) loop
-        --      --      --  put(element(line, i) & " ");
-        --      --      if(element(line, i) = '.') then
-        --      --          sentenceCounter := sentenceCounter + 1;
-        --      --      end if;
-        --      --  end loop;
-
-        --      --  put_line("Sentence counter = " & integer'image(sentenceCounter));
-        --  end loop;
+        end loop;
 
         close(infp);
+
+    end countWords;
+
+-----------------------------------------------------------------------
+
+    -- Reference: https://learn.adacore.com/courses/intro-to-ada/chapters/standard_library_strings.html#string-operations
+    -- Reads the file line by line, breaking each line up into individual words.
+    procedure analyzeText(filename : in unbounded_string) is
+
+    begin
+
+        countWords;
+        countSentences;
 
     end analyzeText;
 
@@ -118,8 +206,11 @@ procedure textyzer is
 begin
 
     filename := getFilename;
-    put_line(to_string(filename));
-
     analyzeText(filename);
+    
+    put_line("Character count (a-z)      : " & NL &
+             "Word count                 : " & integer'image(wordCount) & NL &
+             "Sentence count             : " & integer'image(sentenceCount) & NL &
+             "Number count               : " & integer'image(numCount));
 
 end textyzer;

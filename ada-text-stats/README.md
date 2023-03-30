@@ -22,4 +22,10 @@ The analysis involves calculating the following numerics:
 - Read and process file to calculate quantative values above
 - Output statistics to stdout
 
+## Assumptions
+- Sentences are split by periods
+- Words only contain alphabetical characters (a..z)
+- Numbers can only contain number characters (0-9 and '.' for decimal)
+- Text such as `a4, sam.12, 12_34-56` are neither words nor numbers
+
 ## Testing
