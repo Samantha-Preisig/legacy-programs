@@ -22,7 +22,7 @@ procedure textyzer is
     sline : unbounded_string;
 
     -- Stats
-    wordCount, sentenceCount, numCount : integer := 0;
+    charCount, wordCount, sentenceCount, numCount, punctCount : integer := 0;
 
 ----------------------------- Subprograms -----------------------------
 
@@ -81,18 +81,15 @@ procedure textyzer is
                     
         -- Check if word has any numbers in it
         for i in 1..length(unboundedWord) loop
-            if not (element(unboundedWord, i) = '0' or
-               element(unboundedWord, i) = '1' or
-               element(unboundedWord, i) = '2' or
-               element(unboundedWord, i) = '3' or
-               element(unboundedWord, i) = '4' or
-               element(unboundedWord, i) = '5' or
-               element(unboundedWord, i) = '6' or
-               element(unboundedWord, i) = '7' or
-               element(unboundedWord, i) = '8' or
-               element(unboundedWord, i) = '9' or
-               element(unboundedWord, i) = '-') then
+            if not (element(unboundedWord, i) in '0'..'9') then
                 return false;
+            elsif (element(unboundedWord, i) in 'a'..'z' or
+                   element(unboundedWord, i) in 'A'..'Z') then
+                charCount := charCount + 1;
+                put_line("Char mark: " & element(unboundedWord, i));
+            else
+                put_line("Punct mark: " & element(unboundedWord, i));
+                punctCount := punctCount + 1;
             end if;
         end loop;
 
@@ -114,17 +111,15 @@ procedure textyzer is
                     
         -- Check if word has any numbers in it
         for i in 1..length(unboundedWord) loop
-            if(element(unboundedWord, i) = '0' or
-               element(unboundedWord, i) = '1' or
-               element(unboundedWord, i) = '2' or
-               element(unboundedWord, i) = '3' or
-               element(unboundedWord, i) = '4' or
-               element(unboundedWord, i) = '5' or
-               element(unboundedWord, i) = '6' or
-               element(unboundedWord, i) = '7' or
-               element(unboundedWord, i) = '8' or
-               element(unboundedWord, i) = '9') then
+            if(element(unboundedWord, i) in '0'..'9') then
                 return false;
+            elsif (element(unboundedWord, i) in 'a'..'z' or
+                   element(unboundedWord, i) in 'A'..'Z') then
+                charCount := charCount + 1;
+                put_line("Char mark: " & element(unboundedWord, i));
+            else
+                put_line("Punct mark: " & element(unboundedWord, i));
+                punctCount := punctCount + 1;
             end if;
         end loop;
 
@@ -146,7 +141,7 @@ procedure textyzer is
             exit when end_of_file(infp);
             get_line(infp, sline);
 
-            for i in reverse 1..length(sline) loop
+            for i in 1..length(sline) loop
                 if(element(sline, i) = '.') then
                     counter := counter + 1;
                 end if;
@@ -208,9 +203,10 @@ begin
     filename := getFilename;
     analyzeText(filename);
     
-    put_line("Character count (a-z)      : " & NL &
+    put_line("Character count (a-z)      : " & integer'image(charCount) & NL &
              "Word count                 : " & integer'image(wordCount) & NL &
              "Sentence count             : " & integer'image(sentenceCount) & NL &
-             "Number count               : " & integer'image(numCount));
+             "Number count               : " & integer'image(numCount) & NL &
+             "Punctuation count          : " & integer'image(punctCount));
 
 end textyzer;
