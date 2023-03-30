@@ -111,6 +111,7 @@ procedure textyzer is
     function isWord(word : in string) return boolean is
 
         unboundedWord : unbounded_string := to_unbounded_string(word);
+        subCounter, wordLen : integer := 0; -- to subtract from word length
 
     begin
 
@@ -128,11 +129,13 @@ procedure textyzer is
                 --  put_line("Char mark: " & element(unboundedWord, i));
             else
                 --  put_line("Punct mark: " & element(unboundedWord, i));
+                subCounter := subCounter + 1; -- punctuation can be present at the end of a word, this must be subtracted from the word's length
                 punctCount := punctCount + 1;
             end if;
         end loop;
 
-        wordDist(length(unboundedWord)) := wordDist(length(unboundedWord)) + 1;
+        wordLen := length(unboundedWord) - subCounter;
+        wordDist(wordLen) := wordDist(wordLen) + 1;
         return true;
     
     end isWord;
