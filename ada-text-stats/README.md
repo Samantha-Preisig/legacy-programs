@@ -23,7 +23,7 @@ The analysis involves calculating the following numerics:
 - Output statistics to stdout
 
 ## Assumptions
-- Sentences are split by periods
+- Sentences are split by either periods, exclamation points, or question marks
 - Words only contain alphabetical characters (a..z, A..Z)
 - Numbers can only contain numerical characters (0-9, '.' for decimal, and '-' for negatives)
     - However, '.' and '-' will be counted towards punctuation, no matter the context
