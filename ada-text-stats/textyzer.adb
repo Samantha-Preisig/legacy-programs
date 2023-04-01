@@ -296,5 +296,4 @@ begin
     put_line(NL);
     printHist;
     
-
 end textyzer;
