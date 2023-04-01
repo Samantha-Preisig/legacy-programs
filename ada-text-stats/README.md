@@ -28,3 +28,6 @@ The analysis involves calculating the following numerics:
 - Numbers can only contain numerical characters (0-9, '.' for decimal, and '-' for negatives)
     - However, '.' and '-' will be counted towards punctuation, no matter the context
 - Text such as `a4, sam.12, 12_34-56` are neither words nor numbers. Therefore, they will not be represented within the final stats
+
+## Limitations
+- Rounds averages to whole number --> TODO: fix
