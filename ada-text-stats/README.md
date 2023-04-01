@@ -1,7 +1,7 @@
 # ada-text-stats
 
 ## Compile and run
-Compile: `gnatmake -Wall textyzer.adb`
+Compile: `gnatmake -Wall textyzer.adb`\
 Run: `./textyzer`
 
 ## About

@@ -15,6 +15,7 @@ procedure textyzer is
 
 ------------------------------ Variables ------------------------------
 
+    -- Output formatting
     CR : constant Character := Character'Val(13); -- Carriage return
     LF : constant Character := Character'Val(10); -- Line Feed
     NL : constant String := CR & LF; -- Newline escape sequence
